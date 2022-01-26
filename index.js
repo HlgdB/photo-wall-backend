@@ -1,4 +1,5 @@
 var handle = require('./requestHandler');
+var config = require('./config');
 const path = require('path');
 var express = require('express');
 var multer = require('multer');
@@ -37,14 +38,17 @@ app.post('/upload', upload.array('photos', 9), function(req, res, next){
   // 上传附带的文本域信息在req.body里
   // console.log(req.body);
 
+  var filesPathInfos = req.files.map(item => item.filename);
+  handle.modifyTagInfos(filesPathInfos, req.body.value);
+
   res.json({
     ok: true,
     message: '图片上传成功'
   })
 })
 
-var server = app.listen(6667, function () {
+var server = app.listen(config.port, function () {
   var host = server.address().address
   var port = server.address().port
   console.log("应用实例，访问地址为 http://%s:%s", host, port)
-})
+});
