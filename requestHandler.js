@@ -15,8 +15,11 @@ function modifyTagInfos(filesPathList, tagValue) {
   currentInfos.every(element => {
     if(element.value === tagValue) {
       element.photosPathList = element.photosPathList.concat(filesPathList);
-    };
-    return false;
+      return false;
+    } else {
+      return true;
+    }
+    
   });
 
   try {
