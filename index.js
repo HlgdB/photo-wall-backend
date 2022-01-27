@@ -36,6 +36,10 @@ app.get("/getAllInfos", function (req, res) {
 });
 
 app.get("/addTag", function (req, res) {
+  if(!req.query.value || !req.query.label) {
+    res.write("errorrrrrrrrrr!");
+    return;
+  }
   var nowTags = handle.addTag(req.query.value, req.query.label);
   res.send(nowTags);
 });
