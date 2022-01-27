@@ -32,7 +32,7 @@ app.get('/getAllInfos', function(req, res) {
   res.send(handle.readAlbumTagInfos());
 });
 
-app.post('/upload', upload.array('photos', 9), function(req, res, next){
+app.post('/upload', upload.array('photos', 100), function(req, res, next){
   // 上传好后到文件信息在req.files里
   // console.log(req.files);
   // 上传附带的文本域信息在req.body里
