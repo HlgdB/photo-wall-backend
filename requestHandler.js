@@ -10,6 +10,22 @@ function readAlbumTagInfos() {
   }
 }
 
+function writeAlbumTagInfos(infos) {
+  try {
+    var data = fs.writeFileSync('./albumTagInfos.json', JSON.stringify(infos));
+  } catch (err) {
+    console.error(`Error write file from disk: ${err}`);
+  }
+}
+
+function fetchAllTags(currentInfos) {
+  return currentInfos.map((item) => ({
+    idx: item.idx,
+    value: item.value,
+    label: item.label
+  }));
+}
+
 function modifyTagInfos(filesPathList, tagValue) {
   var currentInfos = readAlbumTagInfos();
   currentInfos.every(element => {
@@ -19,15 +35,39 @@ function modifyTagInfos(filesPathList, tagValue) {
     } else {
       return true;
     }
-    
   });
+  writeAlbumTagInfos(currentInfos);
+  return currentInfos;
+}
 
-  try {
-    var data = fs.writeFileSync('./albumTagInfos.json', JSON.stringify(currentInfos));
-  } catch (err) {
-    console.error(err);
-  }
+function addTag(value, label) {
+  var currentInfos = readAlbumTagInfos();
+  var newTag = {
+    idx: currentInfos.length,
+    value,
+    label,
+    photosPathList: []
+  };
+  currentInfos.push(newTag);
+  writeAlbumTagInfos(currentInfos);
+  return fetchAllTags(currentInfos);
+}
+
+function removeTag(value) {
+  var currentInfos = readAlbumTagInfos();
+  var removeIdx;
+  currentInfos.every((item, idx) => {
+    if(item.value === value) {
+      removeIdx = idx;
+      return false;
+    } else return true;
+  });
+  currentInfos.splice(removeIdx, 1);
+  writeAlbumTagInfos(currentInfos);
+  return fetchAllTags(currentInfos);
 }
 
 exports.readAlbumTagInfos = readAlbumTagInfos;
 exports.modifyTagInfos = modifyTagInfos;
+exports.addTag = addTag;
+exports.removeTag = removeTag;
