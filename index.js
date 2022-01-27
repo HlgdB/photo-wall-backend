@@ -42,13 +42,24 @@ app.get("/getAllInfos", function (req, res) {
 });
 
 app.post("/addTag", jsonParser, function (req, res) {
-  console.log(req.body);
   if(!req.body.value || !req.body.label) {
     res.send("errorrrrrrrrrr!");
     return;
   }
   var nowTags = handle.addTag(req.body.value, req.body.label);
   res.send(nowTags);
+});
+
+app.post("/verifyPassword", jsonParser, function (req, res) {
+  if(!req.body.password) {
+    res.send("errorrrrrrrrrr!");
+    return;
+  };
+  if(req.body.password === config.password) {
+    res.send({ success: true });
+  } else {
+    res.send({ success: false });
+  };
 });
 
 app.post("/upload", upload.array("photos", 100), function (req, res, next) {
