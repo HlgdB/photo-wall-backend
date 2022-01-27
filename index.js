@@ -2,7 +2,13 @@ var handle = require("./requestHandler");
 var config = require("./config");
 const path = require("path");
 var express = require("express");
+var bodyParser = require('body-parser')
 var multer = require("multer");
+
+ 
+// create application/json parser
+var jsonParser = bodyParser.json();
+
 var app = express();
 var upload = multer({
   storage: multer.diskStorage({
@@ -35,12 +41,13 @@ app.get("/getAllInfos", function (req, res) {
   res.send(handle.readAlbumTagInfos());
 });
 
-app.get("/addTag", function (req, res) {
-  if(!req.query.value || !req.query.label) {
+app.post("/addTag", jsonParser, function (req, res) {
+  console.log(req.body);
+  if(!req.body.value || !req.body.label) {
     res.send("errorrrrrrrrrr!");
     return;
   }
-  var nowTags = handle.addTag(req.query.value, req.query.label);
+  var nowTags = handle.addTag(req.body.value, req.body.label);
   res.send(nowTags);
 });
 
